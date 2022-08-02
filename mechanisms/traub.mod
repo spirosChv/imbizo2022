@@ -51,7 +51,6 @@ STATE {
 ASSIGNED {
     v (mV)
     celsius (degC)  : initially was 22
-    i (mA/cm2)
     il (mA/cm2)
     ina (mA/cm2)
     ik (mA/cm2)
@@ -71,8 +70,7 @@ BREAKPOINT {
     ina = gnabar*h*pow(m, 2)*(v - ena)
     ik = gkbar*n*(v - ek)
     :-------------------------
-    il = gl*(v - el) 
-    i = il + ik + ina
+    il = gl*(v - el)
 }
 
 INITIAL {
