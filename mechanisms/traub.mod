@@ -115,7 +115,7 @@ PROCEDURE rates(v(mV)) {
   qt = Q10^((35 - 32)/ 10)
   :"m" sodium activation system
   if(vt == 13.1(mV)){alpha = 0.32*4(/ms)}
-  else{alpha = 0.32(/ms/mV)*(13.1(mV) - vt)/(exp((13.1(mV) - vt)/4(mV)) - 1)}
+  else{alpha = 0.32(/ms/mV)*(-(vt - 13.1(mV)))/(exp(-(vt - 13.1(mV))/4(mV)) - 1)}
   if(vt == 40.1){beta = 0.28*5}
   else{beta = 0.28(/ms/mV)*(vt - 40.1(mV))/(exp((vt - 40.1(mV))/5(mV))-1)}
   sum = alpha + beta
@@ -124,8 +124,8 @@ PROCEDURE rates(v(mV)) {
   minf = alpha/sum
 
   :"h" sodium inactivation system
-  alpha = 0.128(/ms)*exp((17(mV) - vt)/18(mV))
-  beta = 4(/ms)/(1 + exp((40(mV) - vt)/5(mV)))
+  alpha = 0.128(/ms)*exp(-(vt - 17(mV))/18(mV))
+  beta = 4(/ms)/(1 + exp(-(vt - 40(mV))/5(mV)))
   sum = alpha + beta
   htau = 1/sum
   htau = htau/qt
@@ -133,8 +133,8 @@ PROCEDURE rates(v(mV)) {
 
   :"n" potassium activation system
   if(vt == 35.1(mV)){ alpha = 0.016*5 }
-  else{alpha = 0.016(/mV/ms)*(35.1(mV) - vt)/(exp((35.1(mV) - vt)/5(mV)) - 1)}
-  beta = 0.25(/ms)*exp((20(mV) - vt)/40(mV))
+  else{alpha = 0.016(/mV/ms)*(-(vt - 35.1(mV)))/(exp(-(vt - 35.1(mV))/5(mV)) - 1)}
+  beta = 0.25(/ms)*exp(-(vt - 20(mV))/40(mV))
   sum = alpha + beta
   ntau = 1/sum
   ntau = ntau/qt
