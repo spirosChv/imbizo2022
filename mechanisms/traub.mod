@@ -16,8 +16,6 @@ ENDCOMMENT
 
 NEURON {
     SUFFIX traub
-    USEION na READ ena WRITE ina
-    USEION k READ ek WRITE ik
     NONSPECIFIC_CURRENT il
     RANGE il, ina, ik
     RANGE gl, gnabar, gkbar, el, ena, ek
@@ -67,7 +65,7 @@ BREAKPOINT {
     SOLVE states METHOD cnexp 
     :-------------------------
     :Traub et. al. 1991
-    ina = gnabar*h*pow(m, 2)*(v - ena)
+    ina = gnabar*pow(m, 2)*h*(v - ena)
     ik = gkbar*n*(v - ek)
     :-------------------------
     il = gl*(v - el)
@@ -124,7 +122,7 @@ PROCEDURE rates(v (mV)) {
     
     : "m" sodium activation system
     alpha = 0.32(/ms)*vtrap(-(vt - 13.1(mV)), 4(mV))
-    beta = 0.28(/ms)*vtrap((vt - 40.1(mV)), 5(mV))
+    beta = 0.28(/ms)*vtrap(vt - 40.1(mV), 5(mV))
 
     mtau = 1/(alpha + beta)
     mtau = mtau/qt
