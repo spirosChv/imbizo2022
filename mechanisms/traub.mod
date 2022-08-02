@@ -17,7 +17,7 @@ ENDCOMMENT
 NEURON {
     SUFFIX traub
     NONSPECIFIC_CURRENT i
-    RANGE il, ina, ik
+    RANGE il, iNa, iK
     RANGE gl, gnabar, gkbar, el, ena, ek
     RANGE v_shft
 }
@@ -51,8 +51,8 @@ ASSIGNED {
     celsius (degC)  : initially was 22
     i (mA/cm2)
     il (mA/cm2)
-    ina (mA/cm2)
-    ik (mA/cm2)
+    iNa (mA/cm2)
+    iK (mA/cm2)
     minf (1)
     hinf (1)
     ninf (1)
@@ -66,12 +66,12 @@ BREAKPOINT {
     SOLVE states METHOD cnexp 
     :-------------------------
     :Traub et. al. 1991
-    ina = gnabar*pow(m, 2)*h*(v - ena)
-    ik = gkbar*n*(v - ek)
+    iNa = gnabar*pow(m, 2)*h*(v - ena)
+    iK = gkbar*n*(v - ek)
     :-------------------------
     il = gl*(v - el)
     :-------------------------
-    i = il + ik + ina
+    i = il + iK + iNa
 }
 
 INITIAL {
