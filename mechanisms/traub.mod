@@ -24,8 +24,10 @@ UNITS {
 
 NEURON {
   SUFFIX traub
-  NONSPECIFIC_CURRENT i
-  RANGE iL,iNa,iK
+  USEION na WRITE iNa
+  USEION k WRITE iK
+  NONSPECIFIC_CURRENT iL
+  RANGE iL, iNa, iK
   RANGE eL, eNa, eK
   RANGE gLbar, gNabar, gKbar
   RANGE v_shft
@@ -50,14 +52,17 @@ STATE {
 ASSIGNED {
     v (mV)
     i (mA/cm2)
-    cm (uF)
     iL (mA/cm2)
     iNa (mA/cm2)
     iK (mA/cm2)
     gNa (S/cm2)
     gK (S/cm2)
-    minf hinf ninf 
-    mtau (ms) htau (ms) ntau (ms) 
+    minf (1)
+    hinf (1)
+    ninf (1) 
+    mtau (ms)
+    htau (ms)
+    ntau (ms) 
 }
 
 
