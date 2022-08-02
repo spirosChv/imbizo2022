@@ -16,7 +16,7 @@ ENDCOMMENT
 
 NEURON {
     SUFFIX traub
-    NONSPECIFIC_CURRENT il
+    NONSPECIFIC_CURRENT i
     RANGE il, ina, ik
     RANGE gl, gnabar, gkbar, el, ena, ek
     RANGE v_shft
@@ -49,6 +49,7 @@ STATE {
 ASSIGNED {
     v (mV)
     celsius (degC)  : initially was 22
+    i (mA/cm2)
     il (mA/cm2)
     ina (mA/cm2)
     ik (mA/cm2)
@@ -69,6 +70,8 @@ BREAKPOINT {
     ik = gkbar*n*(v - ek)
     :-------------------------
     il = gl*(v - el)
+    :-------------------------
+    i = il + ik + ina
 }
 
 INITIAL {
