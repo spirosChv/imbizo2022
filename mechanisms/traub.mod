@@ -39,7 +39,8 @@ PARAMETER {
     eK = -80 (mV)   :Siu Kang - by email.
     eNa = 90 (mV)   :Leora
     totG = 0
-    v_shft = 49.2 : shift to apply to all curves
+    v_shft = 49.2 (mV) : shift to apply to all curves
+    Q10 = 3 (1)
 }
 
 STATE {
@@ -83,7 +84,6 @@ INITIAL {
     n = ninf
 }
 
-? states
 DERIVATIVE states {  
     rates(v)
     :Traub Spiking channels
@@ -92,12 +92,10 @@ DERIVATIVE states {
     n' = 2*(ninf-n)/ntau :phi=12 from Kang et. al. 2004
 }
 
-? rates
-DEFINE Q10 3
 PROCEDURE rates(v(mV)) {  
   :Computes rate and other constants at current v.
   :Call once from HOC to initialize inf at resting v.
-  LOCAL  alpha, beta, sum, vt, Q
+  LOCAL  alpha, beta, sum, vt, qt
   : see Resources/The unreliable Q10.htm for details
   : remember that not only Q10 is temprature dependent 
   : and just astimated here, but also the calculation of
@@ -115,7 +113,7 @@ PROCEDURE rates(v(mV)) {
   : Experiments were done in >=32degC for m,h
   : Traub et al uses their -60mV as 0mV thus here is the shift
   vt = v + v_shft :49.2
-  Q = Q10^((35 - 32)/ 10)
+  qt = Q10^((35 - 32)/ 10)
   :"m" sodium activation system
   if(vt == 13.1){alpha = 0.32*4}
   else{alpha = 0.32*(13.1 - vt)/(exp((13.1 - vt)/4) - 1)}
@@ -123,7 +121,7 @@ PROCEDURE rates(v(mV)) {
   else{beta = 0.28*(vt - 40.1)/(exp((vt - 40.1)/5)-1)}
   sum = alpha + beta
   mtau = 1/sum
-  mtau = mtau/Q
+  mtau = mtau/qt
   minf = alpha/sum
 
   :"h" sodium inactivation system
@@ -131,7 +129,7 @@ PROCEDURE rates(v(mV)) {
   beta = 4/(1 + exp((40 - vt)/5))
   sum = alpha + beta
   htau = 1/sum
-  htau = htau/Q
+  htau = htau/qt
   hinf = alpha/sum
 
   :"n" potassium activation system
@@ -140,6 +138,6 @@ PROCEDURE rates(v(mV)) {
   beta = 0.25*exp((20 - vt)/40)
   sum = alpha + beta
   ntau = 1/sum
-  ntau = ntau/Q
+  ntau = ntau/qt
   ninf = alpha/sum
 }
