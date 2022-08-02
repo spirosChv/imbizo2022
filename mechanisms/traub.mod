@@ -125,7 +125,7 @@ PROCEDURE rates(v (mV)) {
     qt = Q10^((35(degC) - 32(degC))/10(degC))
     
     : "m" sodium activation system
-    alpha = 0.32(/ms)*vtrap(-(vt + 13.1(mV)), 4(mV))
+    alpha = 0.32(/ms)*vtrap(-(vt - 13.1(mV)), 4(mV))
     beta = 0.28(/ms)*vtrap((vt - 40.1(mV)), 5(mV))
 
     mtau = 1/(alpha + beta)
@@ -141,7 +141,7 @@ PROCEDURE rates(v (mV)) {
     hinf = alpha/(alpha + beta)
 
     : "n" potassium activation system
-    alpha = 0.016(/ms)*vtrap(-(vt + 35.1(mV)), 5(mV))
+    alpha = 0.016(/ms)*vtrap(-(vt - 35.1(mV)), 5(mV))
     beta = 0.25(/ms)*exp(-(vt - 20(mV))/40(mV))
     
     ntau = 1/(alpha + beta)
