@@ -16,21 +16,21 @@ I used phi = 1
 Written by Albert Gidon & Leora Menhaim (2004).
 ENDCOMMENT
 
+NEURON {
+    SUFFIX traub
+    USEION na READ ena WRITE ina
+    USEION k READ ek WRITE ik
+    NONSPECIFIC_CURRENT iL
+    RANGE iL, iNa, iK
+    RANGE eL, eNa, eK
+    RANGE gLbar, gNabar, gKbar
+    RANGE v_shft
+}
+
 UNITS {
     (mA) = (milliamp)
     (mV) = (millivolt)
     (S) = (siemens)     
-}
-
-NEURON {
-  SUFFIX traub
-  USEION na WRITE iNa
-  USEION k WRITE iK
-  NONSPECIFIC_CURRENT iL
-  RANGE iL, iNa, iK
-  RANGE eL, eNa, eK
-  RANGE gLbar, gNabar, gKbar
-  RANGE v_shft
 }
 
 PARAMETER {
