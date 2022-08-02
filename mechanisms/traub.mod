@@ -80,6 +80,13 @@ INITIAL {
     n = ninf
 }
 
+DERIVATIVE states {  
+    rates(v)
+    :Traub Spiking channels
+    m' = (minf-m)/mtau
+    h' = (hinf-h)/htau
+    n' = 2*(ninf-n)/ntau :phi=12 from Kang et. al. 2004
+}
 
 FUNCTION vtrap(x (mV), y (mV)) (1) {
     :Traps for 0 in denominator of rate eqns. Taylor expansion is used.
