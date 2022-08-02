@@ -91,6 +91,23 @@ DERIVATIVE states {
     n' = phi*(ninf-n)/ntau
 }
 
+FUNCTION Exp(x) {
+    if (x < -100) {
+        Exp = 0
+    } else {
+        Exp = exp(x)
+    }
+}
+
+FUNCTION vtrap(x (mV), y (mV)) (1) {
+    :Traps for 0 in denominator of rate eqns.
+    if (fabs(x/y) < 1e-6) {
+        vtrap = 1(/mV)*y*(1 - x/y/2)
+    } else {
+        vtrap = 1(/mV)*x/(Exp(x/y) - 1)
+    }
+}
+
 PROCEDURE rates(v(mV)) {  
   :Computes rate and other constants at current v.
   :Call once from HOC to initialize inf at resting v.
@@ -114,8 +131,8 @@ PROCEDURE rates(v(mV)) {
   vt = v + v_shft :49.2
   qt = Q10^((35 - 32)/ 10)
   :"m" sodium activation system
-  if(vt == 13.1(mV)){alpha = 0.32*4(/ms)}
-  else{alpha = 0.32(/ms/mV)*(-(vt - 13.1(mV)))/(exp(-(vt - 13.1(mV))/4(mV)) - 1)}
+  alpha = 0.32(/ms)*vtrap(-(vt - 13.1(mV)), 4(mV))
+  
   if(vt == 40.1){beta = 0.28*5}
   else{beta = 0.28(/ms/mV)*(vt - 40.1(mV))/(exp((vt - 40.1(mV))/5(mV))-1)}
   sum = alpha + beta
