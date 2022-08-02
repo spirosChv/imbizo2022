@@ -13,52 +13,49 @@ Kang used phi = 12, I used phi = 1
 Written by Albert Gidon & Leora Menhaim (2004).
 ENDCOMMENT
 
-
 NEURON {
-    SUFFIX traub
-    NONSPECIFIC_CURRENT i
-    RANGE il, iNa, iK
-    RANGE gl, gnabar, gkbar, el, ena, ek
-    RANGE v_shft
+  SUFFIX traub
+  NONSPECIFIC_CURRENT i
+  RANGE iL,iNa,iK
+  RANGE eL, eNa, eK
+  RANGE gLbar, gNabar, gKbar
+  RANGE v_shft
 }
 
 UNITS {
     (mA) = (milliamp)
     (mV) = (millivolt)
-    (S) = (siemens)
+    (S) = (siemens)     
 }
 
 PARAMETER {
-    gnabar = .03 (S/cm2)	: Traub et. al. 1991
-    gkbar = .015 (S/cm2) 	: Traub et. al. 1991
-    gl = 0.00014 (S/cm2)    : Siu Kang - by email.
-    el = -62.0 (mV)         : Siu Kang - by email.
-    ek = -80 (mV)           : Siu Kang - by email.
-    ena = 90 (mV)           : Leora
-    v_shft = 49.2 (mV)      : shift to apply to all curves
-    Q10 = 3 (1)             : temperature sensitivity
-    phi = 2 (1)             : phi=12 from Kang et. al. 2004
+    gNabar = .03 (S/cm2)    :Traub et. al. 1991
+    gKbar = .015 (S/cm2)    :Traub et. al. 1991
+    gLbar = 0.00014 (S/cm2) :Siu Kang - by email.
+    eL = -62.0 (mV) :Siu Kang - by email.
+    eK = -80 (mV)   :Siu Kang - by email.
+    eNa = 90 (mV)   :Leora
+    v_shft = 49.2 (mV) : shift to apply to all curves
 }
 
 STATE {
-    m
-    h
-    n
+    m h n a b
 }
 
 ASSIGNED {
     v (mV)
-    celsius (degC)  : initially was 22
     i (mA/cm2)
-    il (mA/cm2)
+    iL (mA/cm2)
     iNa (mA/cm2)
     iK (mA/cm2)
-    minf (1)
-    hinf (1)
-    ninf (1)
+    gNa (S/cm2)
+    gK (S/cm2)
+    minf
+    hinf
+    ninf 
     mtau (ms)
     htau (ms)
-    ntau (ms) 
+    ntau (ms)
 }
 
 
@@ -66,12 +63,14 @@ BREAKPOINT {
     SOLVE states METHOD cnexp 
     :-------------------------
     :Traub et. al. 1991
-    iNa = gnabar*pow(m, 2)*h*(v - ena)
-    iK = gkbar*n*(v - ek)
+    gNa = gNabar*h*pow(m, 2)
+    iNa = gNa*(v - eNa)
+    gK = gKbar*n
+    iK = gK*(v - eK)
     :-------------------------
-    il = gl*(v - el)
+    iL = gLbar*(v - eL)
     :-------------------------
-    i = il + iK + iNa
+    i = iL + iK + iNa
 }
 
 INITIAL {
@@ -81,13 +80,6 @@ INITIAL {
     n = ninf
 }
 
-DERIVATIVE states {  
-    : Traub Spiking channels
-    rates(v)
-    m' = (minf - m)/mtau
-    h' = (hinf - h)/htau
-    n' = phi*(ninf - n)/ntau
-}
 
 FUNCTION vtrap(x (mV), y (mV)) (1) {
     :Traps for 0 in denominator of rate eqns. Taylor expansion is used.
