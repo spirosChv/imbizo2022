@@ -111,7 +111,7 @@ FUNCTION vtrap(x (mV), y (mV)) (1) {
 PROCEDURE rates(v(mV)) {  
   :Computes rate and other constants at current v.
   :Call once from HOC to initialize inf at resting v.
-  LOCAL  alpha, beta, sum, vt, qt
+  LOCAL  alpha, beta, vt, qt
   : see Resources/The unreliable Q10.htm for details
   : remember that not only Q10 is temprature dependent 
   : and just astimated here, but also the calculation of
@@ -126,34 +126,26 @@ PROCEDURE rates(v(mV)) {
   : A model of a CA3 hippocampal pyramidal neuron incorporating 
   : voltage-clamp data on intrinsic conductances. 
   : J Neurophysiol 66, 635-650.
-  : Experiments were done in >=32degC for m,h
+  : Experiments were done in >=32degC for m, and h
   : Traub et al uses their -60mV as 0mV thus here is the shift
   vt = v + v_shft :49.2
   qt = Q10^((35 - 32)/ 10)
+
   :"m" sodium activation system
   alpha = 0.32(/ms)*vtrap(-(vt - 13.1(mV)), 4(mV))
-  
-  if(vt == 40.1){beta = 0.28*5}
-  else{beta = 0.28(/ms/mV)*(vt - 40.1(mV))/(exp((vt - 40.1(mV))/5(mV))-1)}
-  sum = alpha + beta
-  mtau = 1/sum
-  mtau = mtau/qt
-  minf = alpha/sum
+  beta = 0.28(/ms)*vtrap(vt - 40.1(mV), 5(mV))
+  mtau = 1/(qt*(alpha + beta))
+  minf = alpha/(alpha + beta)
 
   :"h" sodium inactivation system
   alpha = 0.128(/ms)*exp(-(vt - 17(mV))/18(mV))
   beta = 4(/ms)/(1 + exp(-(vt - 40(mV))/5(mV)))
-  sum = alpha + beta
-  htau = 1/sum
-  htau = htau/qt
-  hinf = alpha/sum
+  htau = 1/(qt*(alpha + beta))
+  hinf = alpha/(alpha + beta)
 
   :"n" potassium activation system
-  if(vt == 35.1(mV)){ alpha = 0.016*5 }
-  else{alpha = 0.016(/mV/ms)*(-(vt - 35.1(mV)))/(exp(-(vt - 35.1(mV))/5(mV)) - 1)}
+  alpha = 0.016(/ms)*vtrap(-(vt - 35.1(mV)), 5(mV))
   beta = 0.25(/ms)*exp(-(vt - 20(mV))/40(mV))
-  sum = alpha + beta
-  ntau = 1/sum
-  ntau = ntau/qt
-  ninf = alpha/sum
+  ntau = 1/(qt*(alpha + beta))
+  ninf = alpha/(alpha + beta)
 }
