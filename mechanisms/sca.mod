@@ -22,8 +22,6 @@ UNITS {
 }
 
 PARAMETER {
-    inactF = 3 (ms)
-    actF = 1 (ms)
     gcabar = 0.001 (S/cm2)
     temp = 23 (degC) : original temp 
     Q10 = 2.3 : temperature sensitivity
@@ -85,15 +83,15 @@ PROCEDURE rates(v (mV)) {
     LOCAL alpha, beta
 
     : "m" activation gating variable
-    alpha = (0.055/actF)*vtrap(-(v + 35(mV)), 1(mV))
-    beta = (0.94/actF)*exp(-(v + 75(mV))/17(mV))
+    alpha = 0.055(/ms)*vtrap(-(v + 35(mV)), 1(mV))
+    beta = 0.94(/ms)*exp(-(v + 75(mV))/17(mV))
 
     mtau = 1/(alpha + beta)
     minf = alpha/(alpha + beta)
 
     : "h" inactivation 
-    alpha = (0.000457/inactF)*exp(-(v + 13(mV))/50(mV))
-    beta = (0.0065/inactF)/(exp(-(v + 15(mV))/28(mV)) + 1)
+    alpha = 0.000152(/ms)*exp(-(v + 13(mV))/50(mV))
+    beta = 0.00217(/ms)/(exp(-(v + 15(mV))/28(mV)) + 1)
 
     htau = 1/(alpha + beta)
     hinf = alpha/(alpha + beta)
