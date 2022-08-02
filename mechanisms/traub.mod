@@ -17,20 +17,18 @@ Written by Albert Gidon & Leora Menhaim (2004).
 ENDCOMMENT
 
 NEURON {
-    SUFFIX traub
-    USEION na READ ena WRITE iNa
-    USEION k READ ek WRITE iK
-    NONSPECIFIC_CURRENT iL
-    RANGE iL, iNa, iK
-    RANGE eL, eNa, eK
-    RANGE gLbar, gNabar, gKbar
-    RANGE v_shft
+  SUFFIX traub
+  NONSPECIFIC_CURRENT i
+  RANGE iL, iNa, iK
+  RANGE eL, eNa, eK
+  RANGE gLbar, gNabar, gKbar
+  RANGE v_shft
 }
 
 UNITS {
     (mA) = (milliamp)
     (mV) = (millivolt)
-    (S) = (siemens)     
+    (S) = (siemens)
 }
 
 PARAMETER {
@@ -40,13 +38,14 @@ PARAMETER {
     eL = -62.0 (mV) :Siu Kang - by email.
     eK = -80 (mV)   :Siu Kang - by email.
     eNa = 90 (mV)   :Leora
-    totG = 0
     v_shft = 49.2 (mV) : shift to apply to all curves
-    Q10 = 3 (1)
+    Q10 = 3 (1)  : temperature sensitivity
 }
 
 STATE {
-    m h n a b
+    m
+    h
+    n
 }
 
 ASSIGNED {
@@ -75,11 +74,9 @@ BREAKPOINT {
     gK = gKbar*n : - Traub et. al. 1991
     iK = gK*(v - eK)
     :-------------------------
-    iL = gLbar*(v - eL) 
+    iL = gLbar*(v - eL)
+    :-------------------------
     i = iL + iK + iNa
-    :to calculate the input resistance get the sum of
-    :   all the conductance.
-    totG = gNa + gK + gLbar      
 }
 
 INITIAL {
@@ -120,27 +117,27 @@ PROCEDURE rates(v(mV)) {
   vt = v + v_shft :49.2
   qt = Q10^((35 - 32)/ 10)
   :"m" sodium activation system
-  if(vt == 13.1){alpha = 0.32*4}
-  else{alpha = 0.32*(13.1 - vt)/(exp((13.1 - vt)/4) - 1)}
+  if(vt == 13.1(mV)){alpha = 0.32*4(/ms)}
+  else{alpha = 0.32(/ms/mV)*(13.1(mV) - vt)/(exp((13.1(mV) - vt)/4(mV)) - 1)}
   if(vt == 40.1){beta = 0.28*5}
-  else{beta = 0.28*(vt - 40.1)/(exp((vt - 40.1)/5)-1)}
+  else{beta = 0.28(/ms/mV)*(vt - 40.1(mV))/(exp((vt - 40.1(mV))/5(mV))-1)}
   sum = alpha + beta
   mtau = 1/sum
   mtau = mtau/qt
   minf = alpha/sum
 
   :"h" sodium inactivation system
-  alpha = 0.128*exp((17 - vt)/18)
-  beta = 4/(1 + exp((40 - vt)/5))
+  alpha = 0.128(/ms)*exp((17(mV) - vt)/18(mV))
+  beta = 4(/ms)/(1 + exp((40(mV) - vt)/5(mV)))
   sum = alpha + beta
   htau = 1/sum
   htau = htau/qt
   hinf = alpha/sum
 
   :"n" potassium activation system
-  if(vt == 35.1){ alpha = 0.016*5 }
-  else{alpha =0.016*(35.1 - vt)/(exp((35.1 - vt)/5) - 1)}
-  beta = 0.25*exp((20 - vt)/40)
+  if(vt == 35.1(mV)){ alpha = 0.016*5 }
+  else{alpha = 0.016(/mV/ms)*(35.1(mV) - vt)/(exp((35.1(mV) - vt)/5(mV)) - 1)}
+  beta = 0.25(/ms)*exp((20(mV) - vt)/40(mV))
   sum = alpha + beta
   ntau = 1/sum
   ntau = ntau/qt
