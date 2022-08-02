@@ -24,7 +24,7 @@ UNITS {
 PARAMETER {
     gcabar = 0.001 (S/cm2)
     temp = 23 (degC) : original temp 
-    Q10 = 2.3 : temperature sensitivity
+    Q10 = 2.3 (1) : temperature sensitivity
 }
 
 ASSIGNED {
