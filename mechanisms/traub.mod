@@ -18,8 +18,8 @@ ENDCOMMENT
 
 NEURON {
     SUFFIX traub
-    USEION na READ ena WRITE ina
-    USEION k READ ek WRITE ik
+    USEION na READ ena WRITE iNa
+    USEION k READ ek WRITE iK
     NONSPECIFIC_CURRENT iL
     RANGE iL, iNa, iK
     RANGE eL, eNa, eK
