@@ -19,9 +19,9 @@ ENDCOMMENT
 NEURON {
   SUFFIX traub
   NONSPECIFIC_CURRENT i
-  RANGE iL, iNa, iK
-  RANGE eL, eNa, eK
-  RANGE gLbar, gNabar, gKbar
+  RANGE il, iNa, iK
+  RANGE el, eNa, eK
+  RANGE gl, gnabar, gkbar
   RANGE v_shft
 }
 
@@ -32,14 +32,15 @@ UNITS {
 }
 
 PARAMETER {
-    gNabar = .03 (S/cm2)    :Traub et. al. 1991
-    gKbar = .015 (S/cm2)    :Traub et. al. 1991
-    gLbar = 0.00014 (S/cm2) :Siu Kang - by email.
-    eL = -62.0 (mV) :Siu Kang - by email.
+    gnabar = .03 (S/cm2)    :Traub et. al. 1991
+    gkbar = .015 (S/cm2)    :Traub et. al. 1991
+    gl = 0.00014 (S/cm2) :Siu Kang - by email.
+    el = -62.0 (mV) :Siu Kang - by email.
     eK = -80 (mV)   :Siu Kang - by email.
     eNa = 90 (mV)   :Leora
     v_shft = 49.2 (mV) : shift to apply to all curves
     Q10 = 3 (1)  : temperature sensitivity
+    phi = 2 (1) :phi=12 from Kang et. al. 2004
 }
 
 STATE {
@@ -51,11 +52,9 @@ STATE {
 ASSIGNED {
     v (mV)
     i (mA/cm2)
-    iL (mA/cm2)
+    il (mA/cm2)
     iNa (mA/cm2)
     iK (mA/cm2)
-    gNa (S/cm2)
-    gK (S/cm2)
     minf (1)
     hinf (1)
     ninf (1) 
@@ -69,14 +68,12 @@ BREAKPOINT {
     SOLVE states METHOD cnexp 
     :-------------------------
     :Traub et. al. 1991
-    gNa = gNabar*h*m*m
-    iNa = gNa*(v - eNa)
-    gK = gKbar*n : - Traub et. al. 1991
-    iK = gK*(v - eK)
+    iNa = gnabar*pow(m, 2)*h*(v - eNa)
+    iK = gkbar*n*(v - eK)
     :-------------------------
-    iL = gLbar*(v - eL)
+    il = gl*(v - el)
     :-------------------------
-    i = iL + iK + iNa
+    i = il + iK + iNa
 }
 
 INITIAL {
@@ -91,7 +88,7 @@ DERIVATIVE states {
     :Traub Spiking channels
     m' = (minf-m)/mtau
     h' = (hinf-h)/htau
-    n' = 2*(ninf-n)/ntau :phi=12 from Kang et. al. 2004
+    n' = phi*(ninf-n)/ntau
 }
 
 PROCEDURE rates(v(mV)) {  
