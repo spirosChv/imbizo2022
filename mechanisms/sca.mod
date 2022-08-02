@@ -24,7 +24,7 @@ UNITS {
 PARAMETER {
     inactF = 3 (ms)
     actF = 1 (ms)
-    gbar = 0.1 (S/cm2)
+    gcabar = 0.001 (S/cm2)
     temp = 23 (degC) : original temp 
     Q10 = 2.3 : temperature sensitivity
 }
@@ -49,7 +49,7 @@ STATE {
 BREAKPOINT {
     SOLVE states METHOD cnexp
     tadj = Q10^((celsius - temp)/10(degC))
-    ica = tadj*gbar*pow(m, 2)*h*(v - eca)
+    ica = tadj*gcabar*pow(m, 2)*h*(v - eca)
 } 
 
 INITIAL {
@@ -59,18 +59,25 @@ INITIAL {
 }
 
 DERIVATIVE states {  
-    : Traub Spiking channels
     rates(v)
     m' = (minf - m)/mtau
     h' = (hinf - h)/htau
 }
 
+FUNCTION Exp(x) {
+    if (x < -100) {
+        Exp = 0
+    } else {
+        Exp = exp(x)
+    }
+}
+
 FUNCTION vtrap(x (mV), y (mV)) (1) {
-    :Traps for 0 in denominator of rate eqns. Taylor expansion is used.
+    :Traps for 0 in denominator of rate eqns.
     if (fabs(x/y) < 1e-6) {
         vtrap = 1(/mV)*y*(1 - x/y/2)
-    } else {  
-        vtrap = 1(/mV)*x/(exp(x/y) - 1)
+    } else {
+        vtrap = 1(/mV)*x/(Exp(x/y) - 1)
     }
 }
 
