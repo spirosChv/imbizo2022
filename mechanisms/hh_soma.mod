@@ -14,7 +14,7 @@ This file is used ONLY in soma and axon sections
 ENDCOMMENT
 
 NEURON {
-	SUFFIX hha2
+	SUFFIX hh_soma
 	USEION na READ ena WRITE ina
 	USEION k READ ek WRITE ik
 	NONSPECIFIC_CURRENT il

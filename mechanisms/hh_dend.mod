@@ -13,7 +13,7 @@ Used in all BUT somatic and axon sections. The spike threshold is about -50 mV
 ENDCOMMENT
 
 NEURON {
-	SUFFIX hha_old
+	SUFFIX hha_dend
 	USEION na READ ena WRITE ina
 	USEION k READ ek WRITE ik
 	NONSPECIFIC_CURRENT il
